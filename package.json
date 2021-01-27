@@ -1,0 +1,10 @@
+{
+  "name": "image-uploader-backend",
+  "version": "1.0.0",
+  "description": "A simple single responsibility app",
+  "main": "index.js",
+  "repository": "https://github.com/lucaspedroabreu/image-uploader-backend",
+  "author": "Lucas Pedro Abreu <lucasp.abreu@gmail.com>",
+  "license": "MIT",
+  "private": false
+}
