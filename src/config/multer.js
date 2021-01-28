@@ -13,10 +13,12 @@ const multer = require('multer')
 const path = require('path') // guarantees correct path between different OS
 const crypto = require('crypto') // lib used to hash files, passwords, et cetera
 
+const localPath = path.resolve(__dirname, '..', '..', 'tmp', 'uploads')
+
 module.exports = {
-	dest: path.resolve(__dirname, '..', '..', 'temp', 'uploads'), // redundancy for storage: >> multer.diskStorage >> destination: >> callback
+	dest: localPath, // redundancy for storage: >> multer.diskStorage >> destination: >> callback
 	storage: multer.diskStorage({
-		destination: (request, file, callback) => callback(null, path.resolve(__dirname, '..', '..', 'tmp', 'uploads')),
+		destination: (request, file, callback) => callback(null, localPath),
 		filename: (request, file, callback) => {
 			crypto.randomBytes(16, (err, hash) => {
 				if (err) callback(err)
