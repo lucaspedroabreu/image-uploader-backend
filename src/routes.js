@@ -7,13 +7,13 @@ const router = routes.Router()
 
 router.get('/', (req, res) => res.json({ route: 'root/'}))
 router.post('/images', multer(multerConfig).single('imageFile'), async (req, res) => {
-	const { originalname: imageName, size: imageSize, filename: imageUniqueName} = req.file
+	const { originalname: imageName, size: imageSize, uniqueFileName, location: imageURL = '' } = req.file
 	
 	const databasePost = await Post.create({
 		imageName,
 		imageSize,
-		imageUniqueName,
-		imageURL: '',
+		uniqueFileName,
+		imageURL,
 	})
 	
 	return res.json(databasePost)

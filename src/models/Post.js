@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 const PostSchema = new mongoose.Schema({
 	imageName: String,
 	imageSize: Number,
-	imageUniqueName: String,
+	uniqueFileName: String,
 	imageURL: String,
 	createdAt: {
 		type: Date,

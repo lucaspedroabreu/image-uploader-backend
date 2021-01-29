@@ -5,24 +5,42 @@ const crypto = require('crypto') // lib used to hash files, passwords, et cetera
 const aws = require('aws-sdk')
 
 const localPath = path.resolve(__dirname, '..', '..', 'tmp', 'uploads')
-const awsS3storage = new aws.S3({
-	accessKeyId: 'AKIARQIN2EFUGZR5VXOS',
-	secretAccessKey,
+
+// const awsS3storage = new aws.S3({
+// 	accessKeyId: 'AKIARQIN2EFUGZR5VXOS',
+// 	secretAccessKey,
+// })
+
+const uniqueFilenameMethod = (request, file, callback) => {
+	crypto.randomBytes(16, (err, hash) => {
+		if (err) callback(err)
+		
+		file.uniqueFileName = `${hash.toString('hex')}-${file.originalname}`
+		callback(null, file.uniqueFileName)
+	})
+}
+
+const awsS3storageMethod = multerS3({
+	s3: new aws.S3(), // no need to configure accessKeyID nor SecretAccessKey (aws.s3 reads .env variables)
+	bucket: 'image-uploader-app-bucket',
+	contentType: multerS3.AUTO_CONTENT_TYPE,
+	acl: 'public-read',
+	key: uniqueFilenameMethod
 })
+
+const localStorageMethod = multer.diskStorage({
+	destination: (request, file, callback) => callback(null, localPath),
+	filename: uniqueFilenameMethod,
+})
+
+const storageType = {
+	localStorage: localStorageMethod,
+	awsS3: awsS3storageMethod,
+}
 
 module.exports = {
 	dest: localPath, // redundancy for storage: >> multer.diskStorage >> destination: >> callback
-	storage: multer.diskStorage({
-		destination: (request, file, callback) => callback(null, localPath),
-		filename: (request, file, callback) => {
-			crypto.randomBytes(16, (err, hash) => {
-				if (err) callback(err)
-				
-				const fileName = `${hash.toString('hex')}-${file.originalname}`
-				callback(null, fileName)
-			})
-		},
-	}),
+	storage: storageType['awsS3'],
 	limites: {
 		fileSize: 2 * 1024 * 1024,
 	},
