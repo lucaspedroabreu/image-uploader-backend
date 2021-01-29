@@ -1,5 +1,7 @@
 # dependencies
 /node_modules/
 
+.env
+
 tmp/uploads/*
 !tmp/uploads/.gitkeep

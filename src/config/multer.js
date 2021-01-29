@@ -2,9 +2,13 @@ const multer = require('multer')
 const multerS3 = require('multer-s3') // multer-s3 is an extension to multer that serves files to AWS S3
 const path = require('path') // guarantees correct path between different OS
 const crypto = require('crypto') // lib used to hash files, passwords, et cetera
-
+const aws = require('aws-sdk')
 
 const localPath = path.resolve(__dirname, '..', '..', 'tmp', 'uploads')
+const awsS3storage = new aws.S3({
+	accessKeyId: 'AKIARQIN2EFUGZR5VXOS',
+	secretAccessKey,
+})
 
 module.exports = {
 	dest: localPath, // redundancy for storage: >> multer.diskStorage >> destination: >> callback
