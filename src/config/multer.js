@@ -6,11 +6,6 @@ const aws = require('aws-sdk')
 
 const localPath = path.resolve(__dirname, '..', '..', 'tmp', 'uploads')
 
-// const awsS3storage = new aws.S3({
-// 	accessKeyId: 'AKIARQIN2EFUGZR5VXOS',
-// 	secretAccessKey,
-// })
-
 const uniqueFilenameMethod = (request, file, callback) => {
 	crypto.randomBytes(16, (err, hash) => {
 		if (err) callback(err)
@@ -35,12 +30,12 @@ const localStorageMethod = multer.diskStorage({
 
 const storageType = {
 	localStorage: localStorageMethod,
-	awsS3: awsS3storageMethod,
+	awsS3storage: awsS3storageMethod,
 }
 
 module.exports = {
-	dest: localPath, // redundancy for storage: >> multer.diskStorage >> destination: >> callback
-	storage: storageType['awsS3'],
+	dest: localPath, // redundancy for storage
+	storage: storageType[process.env.STORAGE_TYPE],
 	limites: {
 		fileSize: 2 * 1024 * 1024,
 	},
